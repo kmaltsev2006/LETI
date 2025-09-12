@@ -42,14 +42,14 @@ int main()
         auto end = std::chrono::steady_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
         
-        for (int i = 0; i < c1.rows; ++i)
-        {
-            for (int j = 0; j < c1.cols; ++j)
-            {
-                std::cout << c1(i, j) << " ";
-            }
-            std::cout << std::endl;
-        }
+        // for (int i = 0; i < c1.rows; ++i)
+        // {
+        //     for (int j = 0; j < c1.cols; ++j)
+        //     {
+        //         std::cout << c1(i, j) << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
     }
     
     std::cout << "DBG line\n";
@@ -60,13 +60,13 @@ int main()
         auto end = std::chrono::steady_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
         
-        for (int i = 0; i < c2.rows; ++i)
-        {
-            for (int j = 0; j < c2.cols; ++j)
-            {
-                std::cout << c2(i, j) << " ";
-            }
-            std::cout << std::endl;
-        }
+        // for (int i = 0; i < c2.rows; ++i)
+        // {
+        //     for (int j = 0; j < c2.cols; ++j)
+        //     {
+        //         std::cout << c2(i, j) << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
     }
 }
