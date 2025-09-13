@@ -3,4 +3,4 @@ a.out
 
 # UT
 ut/build
-ut/googletest
+ut/googletest/*
