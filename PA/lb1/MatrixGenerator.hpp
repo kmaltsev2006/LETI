@@ -13,6 +13,8 @@ public:
         , _dis()
     {}
 
+    ~MatrixGenerator() = default;
+
     template<typename T>
     Matrix<T> gen(int rows, int cols, const std::pair<T, T>& interval)
     {

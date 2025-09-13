@@ -25,7 +25,9 @@ public:
 
     ~ThreadPool()
     {
+        std::unique_lock lock(_mutex);
         _stop = true;
+        lock.unlock();
         _cv.notify_all();
         for (auto& worker: _workers)
         {
@@ -35,7 +37,7 @@ public:
 
     void enqueue(Task task)
     {
-        std::unique_lock lock(_mutex);
+        std::lock_guard lock(_mutex);
         _tasks.push(std::move(task));
         _cv.notify_one();
     }

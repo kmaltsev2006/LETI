@@ -4,7 +4,7 @@
 #include "ThreadPool.hpp"
 
 template<typename T>
-void multiplyBlocks(const Matrix<T>& a, const Matrix<T>& b, Matrix<T>&c,
+static void multiplyBlocks(const Matrix<T>& a, const Matrix<T>& b, Matrix<T>&c,
      int block_i, int block_j, int block_size, int phase_num)
 {
     // If we come across a pseudo-block, we skip it.
@@ -53,7 +53,7 @@ Matrix<T> multiplyConcurrently(const Matrix<T>& a, const Matrix<T>& b, int threa
     {
         n *= 2;
     }
-    int block_size = 64; // TODO: calculate it somehow
+    int block_size = 16; // TODO: calculate it somehow
 
     int phase = n / block_size; // TODO: check division
 

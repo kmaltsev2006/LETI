@@ -1,6 +1,13 @@
-# Executable files
-a.out
+# Build
+build/*
 
 # UT
 ut/build
 ut/googletest/*
+
+# Logger
+fmt/*
+
+# Benchmark
+benchmark/*
+benchmark.json

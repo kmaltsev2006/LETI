@@ -1,5 +1,7 @@
 #include <iostream>
 #include <utility>
+
+
 #include <chrono> // delete
 #include <random> // delete
 
@@ -40,8 +42,8 @@ int main()
     // auto a = matrix_generator.gen(2, 3, std::make_pair(-100.0, 100.0));
     // auto b = matrix_generator.gen(3, 3, std::make_pair(-100.0, 100.0));
     
-    auto a = matrix_generator.gen(512, 2048, std::make_pair(-100.0, 100.0));
-    auto b = matrix_generator.gen(2048, 512, std::make_pair(-100.0, 100.0));
+    auto a = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
+    auto b = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
     
     {
         auto start = std::chrono::steady_clock::now();
