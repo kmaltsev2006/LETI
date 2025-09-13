@@ -37,8 +37,6 @@ BENCHMARK_DEFINE_F(MatrixFixture, MultiplyConcurrently)(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        const auto now = std::chrono::system_clock::now();
-        const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
         multiplyConcurrently(*a_ptr, *b_ptr, 8);
     }
 }

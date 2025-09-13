@@ -46,20 +46,19 @@ private:
 private:
     void validate(const std::vector<std::vector<T>>& data)
     {
-        if (data.size() == 0)
+        if (0 == data.size())
         {
             throw std::invalid_argument("Matrix cannot be empty");
         }
 
-        int cols = data[0].size();
-        if (cols == 0)
+        if (0 == data[0].size())
         {
             throw std::invalid_argument("Matrix cannot be empty");
         }
 
         for (auto& row : data)
         {
-            if (row.size() != cols)
+            if (row.size() != data[0].size())
             {
                 throw std::invalid_argument("Matrix cannot be jagged");
             }
