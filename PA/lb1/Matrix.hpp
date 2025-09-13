@@ -2,8 +2,10 @@
 
 #include <vector>
 #include <cstdint>
+#include <stdexcept>
 
-template<typename value_t>
+
+template<typename T>
 class Matrix
 {
 public:
@@ -11,18 +13,25 @@ public:
         : rows(rows)
         , cols(cols)
     {
-        _data.assign(rows, std::vector<value_t>(cols, 0.0));
+        _data.assign(rows, std::vector<T>(cols, static_cast<T>(0)));
     }
 
-    explicit Matrix(const std::vector<std::vector<value_t>>&& data)
-        : _data(data)
-        , rows(data.size())
-        , cols(data[0].size())
-    {} // TODO: add validator for empty data
+    explicit Matrix(const std::vector<std::vector<T>>& data)
+    {
+        validate(data);
+        _data = data;
+        rows = data.size();
+        cols = data[0].size();
+    }
 
     ~Matrix() = default;
 
-    value_t& operator()(int i, int j)
+    T& operator()(int i, int j)
+    {
+        return _data[i][j];
+    }
+    
+    T operator()(int i, int j) const
     {
         return _data[i][j];
     }
@@ -32,5 +41,28 @@ public:
     int rows;
 
 private:
-    std::vector<std::vector<value_t>> _data;
+    std::vector<std::vector<T>> _data;
+
+private:
+    void validate(const std::vector<std::vector<T>>& data)
+    {
+        if (data.size() == 0)
+        {
+            throw std::invalid_argument("Matrix cannot be empty");
+        }
+
+        int cols = data[0].size();
+        if (cols == 0)
+        {
+            throw std::invalid_argument("Matrix cannot be empty");
+        }
+
+        for (auto& row : data)
+        {
+            if (row.size() != cols)
+            {
+                throw std::invalid_argument("Matrix cannot be jagged");
+            }
+        }
+    }
 };

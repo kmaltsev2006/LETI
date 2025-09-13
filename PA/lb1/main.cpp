@@ -33,14 +33,21 @@ int main()
     // std::cout << "DBG end\n";
     
     MatrixGenerator matrix_generator;
-    auto a = matrix_generator.gen<double>(1024, 1024, std::make_pair(-100, 100));
-    auto b = matrix_generator.gen<double>(1024, 1024, std::make_pair(-100, 100));
+    // auto a = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
+    // auto b = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
+    
+
+    // auto a = matrix_generator.gen(2, 3, std::make_pair(-100.0, 100.0));
+    // auto b = matrix_generator.gen(3, 3, std::make_pair(-100.0, 100.0));
+    
+    auto a = matrix_generator.gen(512, 2048, std::make_pair(-100.0, 100.0));
+    auto b = matrix_generator.gen(2048, 512, std::make_pair(-100.0, 100.0));
     
     {
         auto start = std::chrono::steady_clock::now();
         auto c1 = multiply(a, b);
         auto end = std::chrono::steady_clock::now();
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
         
         // for (int i = 0; i < c1.rows; ++i)
         // {
@@ -56,9 +63,9 @@ int main()
 
     {
         auto start = std::chrono::steady_clock::now();
-        auto c2 = multiplyConcurrently(a, b, 10);
+        auto c2 = multiplyConcurrently(a, b, 8);
         auto end = std::chrono::steady_clock::now();
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
         
         // for (int i = 0; i < c2.rows; ++i)
         // {

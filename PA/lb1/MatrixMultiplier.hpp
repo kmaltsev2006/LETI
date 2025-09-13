@@ -4,23 +4,48 @@
 #include "ThreadPool.hpp"
 
 template<typename T>
-void multiplyBlocks(Matrix<T>& a, Matrix<T>& b, Matrix<T>&c, int block_i, int block_j, int block_size, int phase_num)
+void multiplyBlocks(const Matrix<T>& a, const Matrix<T>& b, Matrix<T>&c,
+     int block_i, int block_j, int block_size, int phase_num)
 {
-    // TODO: add condition for not calculating
+    // If we come across a pseudo-block, we skip it.
+    if (block_i * block_size >= c.rows || block_j * block_size >= c.cols)
+    {
+        return;
+    }
 
-    for (int i = 0; i < block_size; ++i) {
-        for (int j = 0; j < block_size; ++j) {
-            for (int k = 0; k < block_size; ++k) {
-                c(block_i*block_size+i, block_j*block_size+j) += 
-                    a(block_i*block_size+i, phase_num*block_size+k) * b(phase_num*block_size+k, block_j*block_size+j); // magic mafs
+    for (int i = 0; i < block_size; ++i)
+    {
+        for (int j = 0; j < block_size; ++j)
+        {
+            for (int k = 0; k < block_size; ++k)
+            {
+                int c_i = block_i * block_size + i;
+                int c_j = block_j * block_size + j;
+                int a_i = block_i * block_size + i;
+                int a_j = phase_num * block_size + k;
+                int b_i = phase_num * block_size + k;
+                int b_j = block_j * block_size + j;
+
+                if (c_i >= c.rows || c_j >= c.cols || 
+                    a_i >= a.rows || a_j >= a.cols || 
+                    b_i >= b.rows || b_j >= b.cols)
+                {
+                    continue;
+                }
+                
+                c(c_i, c_j) += a(a_i, a_j) * b(b_i, b_j);
             }
         }
     }
 }
 
 template<typename T>
-Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
+Matrix<T> multiplyConcurrently(const Matrix<T>& a, const Matrix<T>& b, int threads_count)
 {
+    if (a.cols != b.rows)
+    {
+        throw std::invalid_argument("Size mismatch");
+    }
     Matrix<double> c(a.rows, b.cols);
     
     int n = 1;
@@ -28,9 +53,9 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
     {
         n *= 2;
     }
-    int block_size = 16; // TODO: calculate it somehow
+    int block_size = 64; // TODO: calculate it somehow
 
-    int phase = n/block_size; // TODO: check division
+    int phase = n / block_size; // TODO: check division
 
     {
         ThreadPool thread_pool(threads_count);
@@ -53,8 +78,13 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
 }
 
 template <typename T>
-Matrix<T> multiply(Matrix<T>& a, Matrix<T>& b)
+Matrix<T> multiply(const Matrix<T>& a, const Matrix<T>& b)
 {
+    if (a.cols != b.rows)
+    {
+        throw std::invalid_argument("Size mismatch");
+    }
+    
     Matrix<T> c(a.rows, b.cols);
 
     for (int i = 0; i < a.rows; ++i)
