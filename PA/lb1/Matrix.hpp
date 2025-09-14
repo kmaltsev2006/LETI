@@ -12,28 +12,45 @@ public:
     explicit Matrix(int rows, int cols)
         : rows(rows)
         , cols(cols)
-    {
-        _data.assign(rows, std::vector<T>(cols, static_cast<T>(0)));
-    }
+        , _data(new T[rows*cols]())
+    {}
 
     explicit Matrix(const std::vector<std::vector<T>>& data)
     {
         validate(data);
-        _data = data;
+
         rows = data.size();
         cols = data[0].size();
+        
+        _data = new T[rows*cols];
+        
+        for (int i = 0; i < rows; ++i)
+        {
+            for (int j = 0; j < cols; ++j)
+            {
+                _data[cols * i + j] = data[i][j];
+            }
+        }
     }
 
-    ~Matrix() = default;
+    ~Matrix()
+    {
+        delete[] _data;
+    }
+
+    T *data()
+    {
+        return _data;
+    }
 
     T& operator()(int i, int j)
     {
-        return _data[i][j];
+        return _data[cols * i + j];
     }
     
     T operator()(int i, int j) const
     {
-        return _data[i][j];
+        return _data[cols * i + j];
     }
 
 public:
@@ -41,7 +58,7 @@ public:
     int rows;
 
 private:
-    std::vector<std::vector<T>> _data;
+    T *_data;
 
 private:
     void validate(const std::vector<std::vector<T>>& data)

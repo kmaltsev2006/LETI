@@ -42,14 +42,14 @@ int main()
     // auto a = matrix_generator.gen(2, 3, std::make_pair(-100.0, 100.0));
     // auto b = matrix_generator.gen(3, 3, std::make_pair(-100.0, 100.0));
     
-    auto a = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
-    auto b = matrix_generator.gen(64, 64, std::make_pair(-100.0, 100.0));
+    auto a = matrix_generator.gen(1024, 1024, std::make_pair(-100.0, 100.0));
+    auto b = matrix_generator.gen(1024, 1024, std::make_pair(-100.0, 100.0));
     
     {
-        auto start = std::chrono::steady_clock::now();
-        auto c1 = multiply(a, b);
-        auto end = std::chrono::steady_clock::now();
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
+        // auto start = std::chrono::steady_clock::now();
+        // auto c1 = multiply(a, b);
+        // auto end = std::chrono::steady_clock::now();
+        // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
         
         // for (int i = 0; i < c1.rows; ++i)
         // {
@@ -61,7 +61,7 @@ int main()
         // }
     }
     
-    std::cout << "DBG line\n";
+    // std::cout << "DBG line\n";
 
     {
         auto start = std::chrono::steady_clock::now();

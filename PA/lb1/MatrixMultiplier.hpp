@@ -4,11 +4,12 @@
 #include "ThreadPool.hpp"
 
 template<typename T>
-static void multiplyBlocks(const Matrix<T>& a, const Matrix<T>& b, Matrix<T>&c,
-     int block_i, int block_j, int block_size, int phase_num)
+static void multiplyBlocks(T *a, T *b, T *c, 
+    int block_i, int block_j, int block_size, int phase,
+    int n, int m, int p)
 {
     // If we come across a pseudo-block, we skip it.
-    if (block_i * block_size >= c.rows || block_j * block_size >= c.cols)
+    if (block_i * block_size >= n || block_j * block_size >= p)
     {
         return;
     }
@@ -22,52 +23,59 @@ static void multiplyBlocks(const Matrix<T>& a, const Matrix<T>& b, Matrix<T>&c,
                 int c_i = block_i * block_size + i;
                 int c_j = block_j * block_size + j;
                 int a_i = block_i * block_size + i;
-                int a_j = phase_num * block_size + k;
-                int b_i = phase_num * block_size + k;
+                int a_j = phase * block_size + k;
+                int b_i = phase * block_size + k;
                 int b_j = block_j * block_size + j;
 
-                if (c_i >= c.rows || c_j >= c.cols || 
-                    a_i >= a.rows || a_j >= a.cols || 
-                    b_i >= b.rows || b_j >= b.cols)
+                if (c_i >= n || c_j >= p || 
+                    a_i >= n || a_j >= m || 
+                    b_i >= m || b_j >= p)
                 {
                     continue;
                 }
                 
-                c(c_i, c_j) += a(a_i, a_j) * b(b_i, b_j);
+                c[c_i * n + c_j] += a[a_i * n + a_j] * b[b_i * m + b_j];
             }
         }
     }
 }
 
 template<typename T>
-Matrix<T> multiplyConcurrently(const Matrix<T>& a, const Matrix<T>& b, int threads_count)
+Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
 {
     if (a.cols != b.rows)
     {
         throw std::invalid_argument("Size mismatch");
     }
-    Matrix<double> c(a.rows, b.cols);
+    Matrix<T> c(a.rows, b.cols);
     
-    int n = 1;
-    while (n < std::max(std::max(a.rows, a.cols), std::max(b.rows, b.cols))) 
-    {
-        n *= 2;
-    }
-    int block_size = 16; // TODO: calculate it somehow
+    int n = a.rows;
+    int m = a.cols;
+    int p = b.cols;
 
-    int phase = n / block_size; // TODO: check division
+    T* _a = a.data();
+    T* _b = b.data();
+    T* _c = c.data();
+
+    int size = 1;
+    while (size < std::max(std::max(a.rows, a.cols), std::max(b.rows, b.cols))) 
+    {
+        size *= 2;
+    }
+    int block_size = 128; // TODO: calculate it somehow
+    int phase_count = size / block_size; // TODO: check division
 
     {
         ThreadPool thread_pool(threads_count);
 
-        for (int block_i = 0; block_i < phase; ++block_i)
+        for (int block_i = 0; block_i < phase_count; ++block_i)
         {
-            for (int block_j = 0; block_j < phase; ++block_j)
+            for (int block_j = 0; block_j < phase_count; ++block_j)
             {
-                thread_pool.enqueue([&a, &b, &c, block_i, block_j, block_size, phase](){
-                    for (int phase_num = 0; phase_num < phase; ++phase_num)
+                thread_pool.enqueue([_a, _b, _c, block_i, block_j, block_size, phase_count, n, m, p](){
+                    for (int phase = 0; phase < phase_count; ++phase)
                     {
-                        multiplyBlocks(a, b, c, block_i, block_j, block_size, phase_num);
+                        multiplyBlocks(_a, _b, _c, block_i, block_j, block_size, phase, n, m, p);
                     }
                 });
             }

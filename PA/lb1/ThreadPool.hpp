@@ -38,13 +38,13 @@ public:
     void enqueue(Task task)
     {
         std::lock_guard lock(_mutex);
-        _tasks.push(std::move(task));
+        _tasks.push_back(std::move(task));
         _cv.notify_one();
     }
 
 private:
     std::vector<std::thread> _workers;
-    std::queue<Task> _tasks;
+    std::deque<Task> _tasks;
     std::mutex _mutex;
     std::condition_variable _cv;
     bool _stop;
@@ -61,7 +61,7 @@ private:
                 return;
             }
             auto task = std::move(_tasks.front());
-            _tasks.pop();
+            _tasks.pop_front();
             lock.unlock();
             task();
         }
