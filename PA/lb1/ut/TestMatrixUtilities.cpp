@@ -100,10 +100,11 @@ INSTANTIATE_TEST_SUITE_P(
     ArbitraryMatrices,
     TestMatrixMultiplier,
     testing::Values(
-        ut::Dimension {12, 45, 54},
+        ut::Dimension {12, 14, 11},
         ut::Dimension {35, 13, 234},
         ut::Dimension {15, 16, 16},
-        ut::Dimension {10, 10, 10}
+        ut::Dimension {10, 10, 10},
+        ut::Dimension {7, 13, 9}
     )
 );
 

@@ -45,25 +45,34 @@ Matrix<T> multiply(Matrix<T>& a, Matrix<T>& b)
 template<typename T>
 void extractTile(T *dst, T *src, int t_i, int t_j, int t_size, int n, int m)
 {
-    for (int i = 0; i < t_size; ++i)
+    int max_i = std::max(0, std::min(t_size, n - t_i * t_size));
+    int max_j = std::max(0, std::min(t_size, m - t_j * t_size));
+
+    for (int i = 0; i < max_i; ++i)
     {
+        int row = t_i * t_size + i;
+        int src_offset = row * m + t_j * t_size;
         int dst_offset = i * t_size;
-        int src_offset = t_i * t_size * m + t_j * t_size + i * n;
-        std::memcpy(dst + dst_offset, src + src_offset, t_size * sizeof(T)); // add case for 0 bytes sending!
+
+        std::memcpy(dst + dst_offset, src + src_offset, max_j * sizeof(T));
     }
 }
 
 template<typename T>
-void writeTile(T* dst, T *src, int t_i, int t_j, int t_size, int n, int m)
+void writeTile(T* dst, const T *src, int t_i, int t_j, int t_size, int n, int m)
 {
-    for (int i = 0; i < t_size; ++i)
+    int max_i = std::max(0, std::min(t_size, n - t_i * t_size));
+    int max_j = std::max(0, std::min(t_size, m - t_j * t_size));
+
+    for (int i = 0; i < max_i; ++i)
     {
-        int dst_offset = t_i * t_size * m + t_j * t_size + i * n;
+        int row = t_i * t_size + i;
+        int dst_offset = row * m + t_j * t_size;
         int src_offset = i * t_size;
-        std::memcpy(dst + dst_offset, src + src_offset, t_size * sizeof(T)); // add case for 0 bytes sending!
+
+        std::memcpy(dst + dst_offset, src + src_offset, max_j * sizeof(T));
     }
 }
-
 
 template<typename T>
 Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
@@ -94,6 +103,7 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
     int phase_count = size / t_size; // TODO: check division
 
     {
+        // TODO: ADD CONDITION FOR NOT CALCULATING PSEUDO-TILE!!!
         ThreadPool thread_pool(threads_count);
 
         for (int t_i = 0; t_i < phase_count; ++t_i)
@@ -106,18 +116,18 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
 
                     for (int phase = 0; phase < phase_count; ++phase)
                     {
-                        T *a_tile = new T[t_size * t_size];
-                        T *b_tile = new T[t_size * t_size];
+                        T *a_tile = new T[t_size * t_size]();
+                        T *b_tile = new T[t_size * t_size]();
 
                         extractTile(a_tile, a.data(), t_i, phase, t_size, a.rows, a.cols);
                         extractTile(b_tile, b.data(), phase, t_j, t_size, b.rows, b.cols);
                         multiplyRaw(a_tile, b_tile, c_tile, Dimension{t_size, t_size, t_size});
-                        
+
                         delete[] a_tile;
                         delete[] b_tile;
                     }
                     writeTile(c.data(), c_tile, t_i, t_j, t_size, c.rows, c.cols);
-                    
+
                     delete[] c_tile;
                 });
             }
