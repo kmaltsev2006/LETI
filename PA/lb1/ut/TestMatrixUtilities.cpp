@@ -4,18 +4,18 @@
 #include "../MatrixMultiplier.hpp"
 
 template<typename T>
-bool compareMatrices(Matrix<T>&& a, Matrix<T>&& b)
+bool compareMatrices(Matrix<T>&& c1, Matrix<T>&& c2)
 {
-    if (a.rows != b.rows || a.cols != b.cols)
+    if (c1.rows != c2.rows || c1.cols != c2.cols)
     {
         return false;
     }
 
-    for (int i = 0; i < a.rows; ++i)
+    for (int i = 0; i < c1.rows; ++i)
     {
-        for (int j = 0; j < a.cols; ++j)
+        for (int j = 0; j < c2.cols; ++j)
         {
-            if (a(i, j) != b(i, j))
+            if (c1(i, j) != c2(i, j))
             {
                 return false;
             }
@@ -24,19 +24,22 @@ bool compareMatrices(Matrix<T>&& a, Matrix<T>&& b)
     return true;
 }
 
-struct TestingParam
+namespace ut
 {
-    int a_rows;
-    int a_cols;
-    int b_rows;
-    int b_cols;
+struct Dimension
+{
+    int n;
+    int m;
+    int p;
+};
 };
 
-class TestMatrixMultiplier : public testing::TestWithParam<TestingParam>
+
+class TestMatrixMultiplier : public testing::TestWithParam<ut::Dimension>
 {
 public:
     TestMatrixMultiplier()
-        : _thread_number(8)
+        : _thread_number(std::thread::hardware_concurrency())
     {}
 
 protected:
@@ -61,20 +64,23 @@ TEST(MatrixInitialization, Jagged)
 
 TEST(MatrixMultiplication, SizeMismatchSingleThread)
 {
-    EXPECT_THROW( multiply(Matrix<int>(3, 2), Matrix<int>(3, 5)), std::invalid_argument);
+    Matrix<int> a(3, 2);
+    Matrix<int> b(3, 5);
+    EXPECT_THROW( multiply(a, b), std::invalid_argument);
 }
 
 TEST(MatrixMultiplication, SizeMismatchMultiThread)
 {
-    EXPECT_THROW( multiply(Matrix<int>(3, 2), Matrix<int>(3, 5)), std::invalid_argument);
+    Matrix<int> a(3, 2);
+    Matrix<int> b(3, 5);
+    EXPECT_THROW( multiply(a, b), std::invalid_argument);
 }
 
-// Valid sizes of matrices a and b must be guaranteed by the test.
 TEST_P(TestMatrixMultiplier, CompareSingleThreadedAndMultiThreadedImplementation)
 {
-    TestingParam testing_param = GetParam();
-    Matrix a = _matrix_generator.gen(testing_param.a_rows, testing_param.a_cols, std::make_pair(-100.0, 100.0));
-    Matrix b = _matrix_generator.gen(testing_param.b_rows, testing_param.b_cols, std::make_pair(-100.0, 100.0));
+    ut::Dimension dim = GetParam();
+    Matrix a = _matrix_generator.gen<int>(dim.n, dim.m, std::make_pair(-100.0, 100.0));
+    Matrix b = _matrix_generator.gen<int>(dim.m, dim.p, std::make_pair(-100.0, 100.0));
     
     EXPECT_TRUE(compareMatrices(multiply(a, b), multiplyConcurrently(a, b, _thread_number)));
 }
@@ -83,8 +89,10 @@ INSTANTIATE_TEST_SUITE_P(
     PowerOfTwoMatrices,
     TestMatrixMultiplier,
     testing::Values(
-        TestingParam {64, 64, 64, 64},
-        TestingParam {128, 128, 128, 128}
+        ut::Dimension {64, 64, 64},
+        ut::Dimension {128, 128, 128},
+        ut::Dimension {256, 256, 256},
+        ut::Dimension {512, 512, 512}
     )
 );
 
@@ -92,8 +100,11 @@ INSTANTIATE_TEST_SUITE_P(
     ArbitraryMatrices,
     TestMatrixMultiplier,
     testing::Values(
-        TestingParam {35, 13, 13, 234},
-        TestingParam {12, 45, 45, 54}
+        ut::Dimension {12, 45, 54},
+        ut::Dimension {35, 13, 234},
+        ut::Dimension {15, 16, 16},
+        ut::Dimension {10, 10, 10}
+
     )
 );
 

@@ -35,7 +35,7 @@ public:
 
     ~Matrix()
     {
-        delete[] _data;
+        // delete[] _data;
     }
 
     T *data()

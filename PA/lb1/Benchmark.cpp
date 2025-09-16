@@ -1,6 +1,4 @@
 #include <benchmark/benchmark.h>
-#include <iostream> // delete
-#include <chrono> // delete
 
 #include "MatrixGenerator.hpp"
 #include "MatrixMultiplier.hpp"
@@ -11,7 +9,7 @@ class BenchmarkMatrixMultiplier : public benchmark::Fixture
 {
 public:
     BenchmarkMatrixMultiplier()
-        : _thread_number(8)
+        : _thread_number(std::thread::hardware_concurrency())
     {}
 
     void SetUp(const benchmark::State& state) override
@@ -47,12 +45,12 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, MultiplyConcurrently)(benchmark::S
 }
 
 BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, Multiply)
-    ->DenseRange(16, 1024, 16)
+    ->DenseRange(128, 1024, 128)
     ->Iterations(16)
     ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, MultiplyConcurrently)
-    ->DenseRange(16, 1024, 16)
+    ->DenseRange(128, 1024, 128)
     ->Iterations(16)
     ->Unit(benchmark::kMillisecond);
 
