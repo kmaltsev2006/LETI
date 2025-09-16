@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include <cstdint>
 #include <stdexcept>
 
@@ -35,8 +34,30 @@ public:
 
     ~Matrix()
     {
-        // delete[] _data;
+        delete[] _data;
     }
+
+    Matrix (const Matrix& other)
+        : rows(other.rows)
+        , cols(other.cols)
+        , _data(new T[rows*cols])
+    {
+        for (int i = 0; i < rows * cols; ++i)
+        {
+            _data[i] = other._data[i];
+        }
+    }
+
+    Matrix (Matrix&& other)
+        : rows(other.rows)
+        , cols(other.cols)
+        , _data(other._data)
+    {
+        other.rows = 0;
+        other.cols = 0;
+        other._data = nullptr;
+    }
+
 
     T *data()
     {

@@ -1,4 +1,5 @@
 #include <benchmark/benchmark.h>
+#include <iostream> // delete
 
 #include "MatrixGenerator.hpp"
 #include "MatrixMultiplier.hpp"
@@ -45,12 +46,12 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, MultiplyConcurrently)(benchmark::S
 }
 
 BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, Multiply)
-    ->DenseRange(128, 1024, 128)
-    ->Iterations(16)
-    ->Unit(benchmark::kMillisecond);
+    ->DenseRange(128, 2048, 128)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(16);
 
 BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, MultiplyConcurrently)
-    ->DenseRange(128, 1024, 128)
+    ->DenseRange(128, 2024, 128)
     ->Iterations(16)
     ->Unit(benchmark::kMillisecond);
 

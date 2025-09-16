@@ -61,17 +61,17 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
     {
         size *= 2;
     }
-    int block_size = 16; // TODO: calculate it somehow
+    int block_size = 128; // TODO: calculate it somehow
     
-    {
-        // calculation attempt
-        int block_sise = 1;
-        // thread must take at least 3.125% (100 / 8 / 2 / 2)
-        while (block_size < size && threads_count / static_cast<double>((size*size) / (block_sise*block_sise)) < 0.3125)
-        {
-            size *= 2;
-        }
-    }
+    // {
+    //     // calculation attempt
+    //     int block_sise = 1;
+    //     // thread must take at least 3.125% (100 / 8 / 2 / 2)
+    //     while (block_size < size && threads_count / static_cast<double>((size*size) / (block_sise*block_sise)) < 0.3125)
+    //     {
+    //         block_sise *= 2;
+    //     }
+    // }
     
     int phase_count = size / block_size; // TODO: check division
 
