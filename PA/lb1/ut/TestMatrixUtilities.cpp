@@ -104,7 +104,6 @@ INSTANTIATE_TEST_SUITE_P(
         ut::Dimension {35, 13, 234},
         ut::Dimension {15, 16, 16},
         ut::Dimension {10, 10, 10}
-
     )
 );
 

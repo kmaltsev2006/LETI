@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstring>
+
 #include "Matrix.hpp"
 #include "ThreadPool.hpp"
 
@@ -9,93 +11,6 @@ struct Dimension
     int m;
     int p;
 };
-
-template<typename T>
-static void multiplyBlocksRaw(T *a, T *b, T *c, 
-    int block_i, int block_j, int block_size, int phase,
-    Dimension dim)
-{
-    // If we come across a pseudo-block, we skip it.
-    if (block_i * block_size >= dim.n || block_j * block_size >= dim.p)
-    {
-        return;
-    }
-
-    for (int i = 0; i < block_size; ++i)
-    {
-        for (int j = 0; j < block_size; ++j)
-        {
-            for (int k = 0; k < block_size; ++k)
-            {
-                int c_i = block_i * block_size + i;
-                int c_j = block_j * block_size + j;
-                int a_i = block_i * block_size + i;
-                int a_j = phase * block_size + k;
-                int b_i = phase * block_size + k;
-                int b_j = block_j * block_size + j;
-
-                if (c_i >= dim.n || c_j >= dim.p || 
-                    a_i >= dim.n || a_j >= dim.m || 
-                    b_i >= dim.m || b_j >= dim.p)
-                {
-                    continue;
-                }
-
-                c[dim.p * c_i + c_j] += a[dim.m * a_i + a_j] * b[dim.p * b_i + b_j];
-            }
-        }
-    }
-}
-
-template<typename T>
-Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
-{
-    if (a.cols != b.rows)
-    {
-        throw std::invalid_argument("Size mismatch");
-    }
-    Matrix<T> c(a.rows, b.cols);
-
-    int size = 1;
-    while (size < std::max(std::max(a.rows, a.cols), std::max(b.rows, b.cols))) 
-    {
-        size *= 2;
-    }
-    int block_size = 128; // TODO: calculate it somehow
-    
-    // {
-    //     // calculation attempt
-    //     int block_sise = 1;
-    //     // thread must take at least 3.125% (100 / 8 / 2 / 2)
-    //     while (block_size < size && threads_count / static_cast<double>((size*size) / (block_sise*block_sise)) < 0.3125)
-    //     {
-    //         block_sise *= 2;
-    //     }
-    // }
-    
-    int phase_count = size / block_size; // TODO: check division
-
-    {
-        ThreadPool thread_pool(threads_count);
-
-        for (int block_i = 0; block_i < phase_count; ++block_i)
-        {
-            for (int block_j = 0; block_j < phase_count; ++block_j)
-            {
-                thread_pool.enqueue([&a, &b, &c, block_i, block_j, block_size, phase_count](){
-                    for (int phase = 0; phase < phase_count; ++phase)
-                    {
-                        multiplyBlocksRaw(a.data(), b.data(), c.data(), 
-                            block_i, block_j, block_size, phase, 
-                            Dimension{a.rows, a.cols, b.cols});
-                    }
-                });
-            }
-        }
-    }
-
-    return c;
-}
 
 template<typename T>
 static void multiplyRaw(T *a, T *b, T *c, Dimension dim)
@@ -112,7 +27,7 @@ static void multiplyRaw(T *a, T *b, T *c, Dimension dim)
     }
 }
 
-template <typename T>
+template<typename T>
 Matrix<T> multiply(Matrix<T>& a, Matrix<T>& b)
 {
     if (a.cols != b.rows)
@@ -123,6 +38,91 @@ Matrix<T> multiply(Matrix<T>& a, Matrix<T>& b)
     Matrix<T> c(a.rows, b.cols);
     
     multiplyRaw(a.data(), b.data(), c.data(), Dimension{a.rows, a.cols, b.cols});
+
+    return c;
+}
+
+template<typename T>
+void extractTile(T *dst, T *src, int t_i, int t_j, int t_size, int n, int m)
+{
+    for (int i = 0; i < t_size; ++i)
+    {
+        int dst_offset = i * t_size;
+        int src_offset = t_i * t_size * m + t_j * t_size + i * n;
+        std::memcpy(dst + dst_offset, src + src_offset, t_size * sizeof(T)); // add case for 0 bytes sending!
+    }
+}
+
+template<typename T>
+void writeTile(T* dst, T *src, int t_i, int t_j, int t_size, int n, int m)
+{
+    for (int i = 0; i < t_size; ++i)
+    {
+        int dst_offset = t_i * t_size * m + t_j * t_size + i * n;
+        int src_offset = i * t_size;
+        std::memcpy(dst + dst_offset, src + src_offset, t_size * sizeof(T)); // add case for 0 bytes sending!
+    }
+}
+
+
+template<typename T>
+Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
+{
+    if (a.cols != b.rows)
+    {
+        throw std::invalid_argument("Size mismatch");
+    }
+    Matrix<T> c(a.rows, b.cols);
+
+    int size = 1;
+    while (size < std::max(std::max(a.rows, a.cols), std::max(b.rows, b.cols))) 
+    {
+        size <<= 1;
+    }
+    int t_size = 128; // TODO: calculate it somehow
+    
+    // {
+    //     // calculation attempt
+    //     int tile_sise = 1;
+    //     // thread must take at least 3.125% (100 / 8 / 2 / 2)
+    //     while (t_size < size && threads_count / static_cast<double>((size*size) / (tile_sise*tile_sise)) < 0.3125)
+    //     {
+    //         tile_sise *= 2;
+    //     }
+    // }
+    
+    int phase_count = size / t_size; // TODO: check division
+
+    {
+        ThreadPool thread_pool(threads_count);
+
+        for (int t_i = 0; t_i < phase_count; ++t_i)
+        {
+            for (int t_j = 0; t_j < phase_count; ++t_j)
+            {
+                thread_pool.enqueue([&a, &b, &c, t_i, t_j, t_size, phase_count](){
+                    
+                    T *c_tile = new T[t_size * t_size]();
+
+                    for (int phase = 0; phase < phase_count; ++phase)
+                    {
+                        T *a_tile = new T[t_size * t_size];
+                        T *b_tile = new T[t_size * t_size];
+
+                        extractTile(a_tile, a.data(), t_i, phase, t_size, a.rows, a.cols);
+                        extractTile(b_tile, b.data(), phase, t_j, t_size, b.rows, b.cols);
+                        multiplyRaw(a_tile, b_tile, c_tile, Dimension{t_size, t_size, t_size});
+                        
+                        delete[] a_tile;
+                        delete[] b_tile;
+                    }
+                    writeTile(c.data(), c_tile, t_i, t_j, t_size, c.rows, c.cols);
+                    
+                    delete[] c_tile;
+                });
+            }
+        }
+    }
 
     return c;
 }

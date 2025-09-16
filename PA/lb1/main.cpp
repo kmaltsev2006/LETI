@@ -12,12 +12,12 @@ int main()
 {
     MatrixGenerator matrix_generator;    
     
-    auto a = matrix_generator.gen(1280, 1280, std::make_pair(-100.0, 100.0));
-    auto b = matrix_generator.gen(1280, 1280, std::make_pair(-100.0, 100.0));
+    auto a = matrix_generator.gen<int>(2048, 2048, std::make_pair(-100.0, 100.0));
+    auto b = matrix_generator.gen<int>(2048, 2048, std::make_pair(-100.0, 100.0));
     
     {
         // auto start = std::chrono::steady_clock::now();
-        // Matrix<double> c = multiply(a, b);
+        // auto c = multiply(a, b);
         // auto end = std::chrono::steady_clock::now();
         // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
         
@@ -33,7 +33,7 @@ int main()
     
     {
         auto start = std::chrono::steady_clock::now();
-        Matrix<double> c = multiplyConcurrently(a, b, std::thread::hardware_concurrency());
+        auto c = multiplyConcurrently(a, b, std::thread::hardware_concurrency());
         auto end = std::chrono::steady_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
 
@@ -45,5 +45,6 @@ int main()
         //     }
         //     std::cout << std::endl;
         // }
+        // std::cout << std::endl;
     }
 }
