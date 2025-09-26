@@ -1,0 +1,38 @@
+2025-09-22T16:03:15+03:00
+Running ./build/BenchmarkMatrixUtilities
+Run on (8 X 2000 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x8)
+  L1 Instruction 32 KiB (x8)
+  L2 Unified 512 KiB (x8)
+  L3 Unified 4096 KiB (x2)
+Load Average: 1.33, 1.50, 2.42
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+***WARNING*** Library was built as DEBUG. Timings may be affected.
+------------------------------------------------------------------------------------------------------------
+Benchmark                                                                  Time             CPU   Iterations
+------------------------------------------------------------------------------------------------------------
+BenchmarkMatrixMultiplier/Multiply/128/iterations:16                    12.2 ms         12.2 ms           16
+BenchmarkMatrixMultiplier/Multiply/256/iterations:16                     104 ms          104 ms           16
+BenchmarkMatrixMultiplier/Multiply/384/iterations:16                     322 ms          322 ms           16
+BenchmarkMatrixMultiplier/Multiply/512/iterations:16                     543 ms          543 ms           16
+BenchmarkMatrixMultiplier/Multiply/640/iterations:16                     943 ms          943 ms           16
+BenchmarkMatrixMultiplier/Multiply/768/iterations:16                    1660 ms         1660 ms           16
+BenchmarkMatrixMultiplier/Multiply/896/iterations:16                    2743 ms         2744 ms           16
+BenchmarkMatrixMultiplier/Multiply/1024/iterations:16                  14184 ms        14185 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/128/iterations:16        2.50 ms        0.386 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/256/iterations:16        13.6 ms        0.404 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/384/iterations:16        52.9 ms        0.492 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/512/iterations:16        93.4 ms        0.691 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/640/iterations:16         291 ms         1.06 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/768/iterations:16         419 ms         1.30 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/896/iterations:16         560 ms         1.38 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1024/iterations:16        736 ms         1.81 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1152/iterations:16       1955 ms         2.72 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1280/iterations:16       2364 ms         3.50 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1408/iterations:16       2885 ms         3.59 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1536/iterations:16       3345 ms         4.26 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1664/iterations:16       4004 ms         4.74 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1792/iterations:16       4604 ms         5.23 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/1920/iterations:16       5318 ms         6.47 ms           16
+BenchmarkMatrixMultiplier/MultiplyConcurrently/2048/iterations:16       5991 ms         26.6 ms           16

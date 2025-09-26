@@ -66,6 +66,16 @@
         "map": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "expected": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "ranges": "cpp",
+        "typeindex": "cpp"
     }
 }

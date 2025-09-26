@@ -88,28 +88,28 @@ Matrix<T> multiplyConcurrently(Matrix<T>& a, Matrix<T>& b, int threads_count)
     {
         size <<= 1;
     }
-    int t_size = 128; // TODO: calculate it somehow
+
+
+    int t_size = 1;
+    while (t_size < size && 8.0 / double((size*size)/(t_size*t_size)) < 0.03125)
+    {
+        t_size <<= 1;
+    }
     
-    // {
-    //     // calculation attempt
-    //     int tile_sise = 1;
-    //     // thread must take at least 3.125% (100 / 8 / 2 / 2)
-    //     while (t_size < size && threads_count / static_cast<double>((size*size) / (tile_sise*tile_sise)) < 0.3125)
-    //     {
-    //         tile_sise *= 2;
-    //     }
-    // }
-    
-    int phase_count = size / t_size; // TODO: check division
+    int phase_count = size / t_size;
 
     {
-        // TODO: ADD CONDITION FOR NOT CALCULATING PSEUDO-TILE!!!
         ThreadPool thread_pool(threads_count);
 
         for (int t_i = 0; t_i < phase_count; ++t_i)
         {
             for (int t_j = 0; t_j < phase_count; ++t_j)
             {
+                // If we come across a pseudo-block, we skip it.
+                if (t_i * t_size >= c.rows || t_j * t_size >= c.cols)
+                {
+                    continue;
+                }
                 thread_pool.enqueue([&a, &b, &c, t_i, t_j, t_size, phase_count](){
                     
                     T *c_tile = new T[t_size * t_size]();

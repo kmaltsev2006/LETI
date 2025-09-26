@@ -1,13 +1,16 @@
 # Build
-build/*
+build
 
 # UT
 ut/build
-ut/googletest/*
+ut/googletest
 
 # Logger
-fmt/*
+fmt
 
 # Benchmark
-benchmark/*
+benchmark
 benchmark.json
+
+# Python env and cache
+Benchmark-graph-builder/env
