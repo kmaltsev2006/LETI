@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tetris</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 20px 20px 20px;
+            overflow: hidden;
+            gap: 20px;
+        }
+        #container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        #next-piece-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        #game-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            border: 1px solid black;
+            background: #eee;
+        }
+        #info-section {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .info-field {
+            font-size: 1rem;
+            padding: 6px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            background: #f9f9f9;
+            user-select: none;
+        }
+        button {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="next-piece-container">
+            <canvas width="128" height="128" id="next-piece"></canvas>
+            <label>Next Piece</label>
+        </div>
+        <div id="game-section">
+            <canvas width="320" height="640" id="game"></canvas>
+        </div>
+        <div id="info-section">
+            <div>
+                <label>Username</label>
+                <div class="info-field" id="username">Player1</div>
+            </div>
+            <div>
+                <label>Current Level</label>
+                <div class="info-field" id="current-level">1</div>
+            </div>
+            <div>
+                <label>Controls</label>
+                <div class="info-field" id="controls-info">
+                    Arrow keys to move, Up to rotate
+                </div>
+            </div>
+            <button id="start-button">Start</button>
+        </div>
+    </div>
+<script type="module" src="./js/game.js"></script>
+</body>
+</html>
