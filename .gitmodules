@@ -1,0 +1,6 @@
+[submodule "PA/Maltsev_Kirill_lb1/benchmark/benchmark"]
+	path = PA/Maltsev_Kirill_lb1/benchmark/benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "PA/Maltsev_Kirill_lb1/ut/googletest"]
+	path = PA/Maltsev_Kirill_lb1/ut/googletest
+	url = https://github.com/google/googletest.git
