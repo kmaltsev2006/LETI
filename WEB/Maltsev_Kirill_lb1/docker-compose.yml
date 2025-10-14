@@ -1,0 +1,8 @@
+services:
+  tetris:
+    container_name: tetris
+    image: "nginx"
+    ports:
+      - 9090:80
+    volumes:
+      - ./tetris.com:/usr/share/nginx/html
