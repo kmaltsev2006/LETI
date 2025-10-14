@@ -1,0 +1,202 @@
+r3
+GuiRouter
+525,186
+true
+4
+cua0|1|null|100.00
+eth0|0|r3(eth0) - PC4(eth0)|100.0|44:43:A8:64:53:30|true
+eth1|0|r3(eth1) - Hub1(eth2)|100.0|8E:8C:24:C4:29:47|true
+ser0|4|null|100.00|400000
+#config
+hostname r3
+no interface ser0 shutdown
+interface eth1 mac-address 41:6E:4E:19:59:6A
+interface eth1 ip address 129.64.128.103 255.255.255.0
+no interface eth1 shutdown
+interface eth0 mac-address 34:BC:34:B6:50:A4
+interface eth0 ip address 10.0.0.1 255.0.0.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 129.64.128.101 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+R2
+GuiRouter
+531,69
+true
+4
+cua0|1|null|100.00
+eth0|0|R2(eth0) - PC2(eth0)|100.0|B0:3B:82:82:28:89|true
+eth1|0|R1(eth1) - R2(eth1)|100.0|8C:60:7F:83:A2:26|true
+ser0|4|null|100.00|400000
+#config
+hostname R2
+no interface ser0 shutdown
+interface eth1 mac-address 8C:70:C5:74:1F:6C
+interface eth1 ip address 192.168.100.2 255.255.255.0
+no interface eth1 shutdown
+interface eth0 mac-address 1C:A4:89:BE:39:C3
+interface eth0 ip address 129.64.127.102 255.255.128.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 192.168.100.1 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+R1
+GuiRouter
+363,69
+true
+4
+cua0|1|null|100.00
+eth0|0|Hub1-TO-R1|100.0|BB:20:14:3F:AF:33|true
+eth1|0|R1(eth1) - R2(eth1)|100.0|63:91:64:3A:AC:15|true
+ser0|4|null|100.00|400000
+#config
+hostname R1
+no interface ser0 shutdown
+interface eth1 mac-address 97:63:8D:8C:A0:11
+interface eth1 ip address 192.168.100.1 255.255.0.0
+no interface eth1 shutdown
+interface eth0 mac-address 1D:27:51:8C:25:61
+interface eth0 ip address 129.64.128.101 255.255.128.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 192.168.100.2 eth0
+ip route 10.0.0.0 255.0.0.0 129.64.128.103 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+Hub1
+GuiHub
+362,186
+true
+5
+eth0|0|PC1-TO-Hub1|100.0|#|false
+eth1|0|Hub1-TO-R1|100.0|#|false
+eth2|0|r3(eth1) - Hub1(eth2)|100.0|#|false
+eth3|0|Hub1-TO-hub3|100.0|#|false
+eth4|0|null|100.00|#|false
+#config
+#endconfig
+#data
+#enddata
+PC4
+GuiPC
+662,187
+true
+2
+cua0|1|null|100.00
+eth0|0|r3(eth0) - PC4(eth0)|100.0|C6:BA:C7:3D:45:32|true
+#config
+hostname PC4
+interface eth0 mac-address 79:72:97:25:5B:90
+interface eth0 ip address 10.0.0.2 255.0.0.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 10.0.0.1 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+PC3
+GuiPC
+528,287
+true
+2
+cua0|1|null|100.00
+eth0|0|hub3-TO-PC3|100.0|2F:79:94:70:C1:6E|true
+#config
+hostname PC3
+interface eth0 mac-address 1E:4B:87:75:62:19
+interface eth0 ip address 129.64.128.33 255.255.128.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 129.64.128.101 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+PC2
+GuiPC
+662,69
+true
+2
+cua0|1|null|100.00
+eth0|0|R2(eth0) - PC2(eth0)|100.0|44:2D:8D:93:2A:5D|true
+#config
+hostname PC2
+interface eth0 mac-address AA:58:B6:1C:7B:A6
+interface eth0 ip address 129.64.127.254 255.255.128.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 129.64.127.102 eth0
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+PC1
+GuiPC
+209,186
+true
+2
+cua0|1|null|100.00
+eth0|0|PC1-TO-Hub1|100.0|7D:6F:17:A3:25:2A|true
+#config
+hostname PC1
+interface eth0 mac-address 54:99:60:33:7E:6C
+interface eth0 ip address 129.64.128.1 255.255.128.0
+no interface eth0 shutdown
+ip route default 0.0.0.0 129.64.128.101 eth0
+arp 129.64.128.33        1E:4B:87:75:62:19
+clock set 00:00:00 1 1 1970
+username root javanetsim
+router ospf area0
+#endconfig
+#data
+vlan.dat
+1
+
+#enddata
+hub3
+GuiHub
+363,287
+true
+5
+eth0|0|Hub1-TO-hub3|100.0|#|false
+eth1|0|null|100.00|#|false
+eth2|0|hub3-TO-PC3|100.0|#|false
+eth3|0|null|100.00|#|false
+eth4|0|null|100.00|#|false
+#config
+#endconfig
+#data
+#enddata
