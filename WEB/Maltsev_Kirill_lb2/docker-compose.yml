@@ -1,0 +1,9 @@
+services:
+  library:
+    build:
+      context: .
+    container_name: library
+    ports:
+      - 9090:80
+    volumes:
+      - ./lib.com:/home

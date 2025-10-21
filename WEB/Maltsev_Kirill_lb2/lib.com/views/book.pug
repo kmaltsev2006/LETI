@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  h2 Edit Book
+
+  .book-card
+    label Title:
+    input(type="text", id="bookTitle", value=book.title)
+
+    label Author:
+    input(type="text", id="bookAuthor", value=book.author)
+
+    label Publication Year:
+    input(type="number", id="bookYear", value=book.year min="1")
+
+    if book.available
+      p.status Status: Available
+      button(onclick=`openBorrowDialog(${book.id})`) 📚 Borrow Book
+    else
+      p.status Status: Borrowed by #{book.borrower}
+      p Due Date: #{book.dueDate || '-'}
+      button(onclick=`returnBook(${book.id})`) 🔄 Return Book
+
+    button(onclick=`saveBookChanges(${book.id})`) 💾 Save Changes
+    a(href="/") ← Back to List
+
+  // Borrow Book Modal Dialog
+  dialog#borrowDialog
+    form(method="dialog" id="borrowForm")
+      h3 Borrow Book
+      label(for="borrowerName") Reader Name:
+      input(type="text" id="borrowerName" required)
+      label(for="dueDateInput") Due Date:
+      input(type="date" id="dueDateInput" required)
+      .buttons
+        button(type="button" onclick="confirmBorrow()") ✅ Confirm
+        button(type="submit") ❌ Cancel
+
+  // Pass current book id to main.js (if needed)
+  script.
+    window.PAGE_BOOK_ID = #{book.id}
+  script(src="/js/main.js")
