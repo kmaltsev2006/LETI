@@ -1,0 +1,58 @@
+[
+  {
+    "id": 2,
+    "userId": 2,
+    "title": "Отличная погода",
+    "content": "Сегодня замечательная погода, пошли гулять!",
+    "date": "2024-10-05T14:20:00",
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "userId": 3,
+    "title": "Спам",
+    "content": "Купите наш продукт прямо сейчас!",
+    "date": "2024-10-12T16:45:00",
+    "status": "active"
+  },
+  {
+    "id": 5,
+    "userId": 2,
+    "title": "Мастер и Маргарита 212",
+    "content": "213123123",
+    "date": "2025-10-19T15:12:35.643Z",
+    "status": "blocked"
+  },
+  {
+    "id": 6,
+    "userId": 5,
+    "title": "dsds",
+    "content": "sadasd",
+    "date": "2025-10-19T15:38:41.550Z",
+    "status": "active"
+  },
+  {
+    "id": 7,
+    "userId": 2,
+    "title": "ыы",
+    "content": "ыыы",
+    "date": "2025-10-19T15:45:25.467Z",
+    "status": "blocked"
+  },
+  {
+    "id": 8,
+    "userId": 2,
+    "title": "sdad",
+    "content": "asdasd",
+    "date": "2025-10-19T15:49:55.094Z",
+    "status": "active"
+  },
+  {
+    "id": 9,
+    "userId": 12,
+    "title": "sdad",
+    "content": "asdasdadassd",
+    "date": "2025-10-19T15:49:55.094Z",
+    "status": "active"
+  }
+]

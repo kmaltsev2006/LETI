@@ -1,0 +1,57 @@
+[
+  {
+    "id": 2,
+    "firstName": "Мария",
+    "lastName": "Петрова1",
+    "middleName": "Сергеевна",
+    "birthDate": "1992-08-22",
+    "email": "petrova@example.com",
+    "photo": "/images/user2.jpg",
+    "role": "admin",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "firstName": "Алексей",
+    "lastName": "Сидоров",
+    "middleName": "Петрович",
+    "birthDate": "1988-03-10",
+    "email": "sidorov@example.com",
+    "photo": "/images/user3.jpg",
+    "role": "user",
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "firstName": "Елена",
+    "lastName": "Смирнова",
+    "middleName": "Александровна",
+    "birthDate": "1995-11-30",
+    "email": "smirnova@example.com",
+    "photo": "/images/user4.jpg",
+    "role": "user",
+    "status": "pending"
+  },
+  {
+    "id": 5,
+    "firstName": "Тест",
+    "lastName": "Тестов",
+    "middleName": "Тестович",
+    "birthDate": "2000-01-01",
+    "email": "test@example.com",
+    "role": "user",
+    "status": "active",
+    "photo": "/images/default.jpg"
+  },
+  {
+    "id": 6,
+    "firstName": "аа",
+    "lastName": "аф",
+    "middleName": "ффф",
+    "birthDate": "2025-10-02",
+    "email": "petrova23@example.com",
+    "role": "user",
+    "status": "active",
+    "photo": "/images/default.jpg"
+  }
+]

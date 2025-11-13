@@ -1,0 +1,82 @@
+extends layout
+
+block content
+  .row
+    .col-md-8
+      .card.mb-4
+        .card-header.bg-primary.text-white
+          h3 Информация о пользователе
+        .card-body
+          form#userForm
+            input#userId(type="hidden")
+            
+            .row
+              .col-md-4.mb-3
+                label.form-label(for="firstName") Имя
+                input.form-control#firstName(type="text" required)
+              
+              .col-md-4.mb-3
+                label.form-label(for="lastName") Фамилия
+                input.form-control#lastName(type="text" required)
+              
+              .col-md-4.mb-3
+                label.form-label(for="middleName") Отчество
+                input.form-control#middleName(type="text" required)
+            
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="birthDate") Дата рождения
+                input.form-control#birthDate(type="date" required)
+              
+              .col-md-6.mb-3
+                label.form-label(for="email") Email
+                input.form-control#email(type="email" required)
+            
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="role") Роль
+                select.form-select#role(required)
+                  option(value="user") Пользователь
+                  option(value="admin") Администратор
+              
+              .col-md-6.mb-3
+                label.form-label(for="status") Статус
+                select.form-select#status(required)
+                  option(value="pending") Не подтверждённый
+                  option(value="active") Активный
+                  option(value="blocked") Заблокированный
+            
+            .d-flex.gap-2
+              button.btn.btn-primary(type="submit") Сохранить изменения
+              a.btn.btn-secondary(href="/") Назад к списку
+              button.btn.btn-danger#deleteUserBtn(type="button") Удалить пользователя
+      
+      .card
+        .card-header.bg-info.text-white
+          h4 Друзья пользователя
+        .card-body
+          #friendsList
+            //- Друзья загружаются через JS
+          
+          .mt-3
+            button.btn.btn-sm.btn-success#addFriendBtn + Добавить друга
+
+  //- Модальное окно добавления друга
+  .modal.fade#addFriendModal(tabindex="-1")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title Добавить друга
+          button.btn-close(type="button" data-bs-dismiss="modal")
+        .modal-body
+          .mb-3
+            label.form-label(for="friendSelect") Выберите пользователя
+            select.form-select#friendSelect
+              option(value="") Загрузка...
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Отмена
+          button.btn.btn-primary#saveFriendBtn Добавить
+
+block scripts
+  script(src="/js/user-detail.js")
+

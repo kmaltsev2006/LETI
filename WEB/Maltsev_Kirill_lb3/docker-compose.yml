@@ -1,0 +1,7 @@
+services:
+  library:
+    build:
+      context: .
+    container_name: lab3
+    ports:
+      - "9090:3112"

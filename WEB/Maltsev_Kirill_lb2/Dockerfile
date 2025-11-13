@@ -8,4 +8,4 @@ WORKDIR /home
 
 RUN npm install --save express
 
-ENTRYPOINT node app.js
+ENTRYPOINT node app.js && /bin/bash

@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1.mb-4 Управление новостями
+  
+  .mb-3
+    label.form-label(for="userSelect") Новости друзей пользователя:
+    select.form-select#userSelect
+      option(value="") Все новости
+  
+  #newsList
+    //- Новости загружаются через JS
+
+block scripts
+  script(src="/js/news.js")
+

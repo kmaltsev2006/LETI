@@ -1,0 +1,75 @@
+extends layout
+
+block content
+  h1.mb-4 Управление пользователями
+  
+  .mb-3
+    button.btn.btn-success#addUserBtn
+      | + Добавить пользователя
+  
+  .table-responsive
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+          th ФИО
+          th Дата рождения
+          th Email
+          th Роль
+          th Статус
+          th Действия
+      tbody#usersTableBody
+
+
+  .modal.fade#editModal(tabindex="-1")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title Редактировать пользователя
+          button.btn-close(type="button" data-bs-dismiss="modal")
+        .modal-body
+          form#editForm
+            input#editUserId(type="hidden")
+            
+            .mb-3
+              label.form-label(for="editFirstName") Имя
+              input.form-control#editFirstName(type="text" required)
+            
+            .mb-3
+              label.form-label(for="editLastName") Фамилия
+              input.form-control#editLastName(type="text" required)
+            
+            .mb-3
+              label.form-label(for="editMiddleName") Отчество
+              input.form-control#editMiddleName(type="text" required)
+            
+            .mb-3
+              label.form-label(for="editBirthDate") Дата рождения
+              input.form-control#editBirthDate(type="date" required)
+            
+            .mb-3
+              label.form-label(for="editEmail") Email
+              input.form-control#editEmail(type="email" required)
+
+            .mb-3
+              label.form-label(for="editPassword") Пароль
+              input.form-control#editPassword(type="password" required)
+            
+            .mb-3
+              label.form-label(for="editRole") Роль
+              select.form-select#editRole(required)
+                option(value="user") Пользователь
+                option(value="admin") Администратор
+            
+            .mb-3
+              label.form-label(for="editStatus") Статус
+              select.form-select#editStatus(required)
+                option(value="pending") Не подтверждённый
+                option(value="active") Активный
+                option(value="blocked") Заблокированный
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Отмена
+          button.btn.btn-primary#saveUserBtn Сохранить
+
+block scripts
+  script(src="/js/users.js")
+
