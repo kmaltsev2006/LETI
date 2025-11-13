@@ -2,11 +2,15 @@ from node
 
 RUN apt-get update && \
     apt-get install openssh-server -y && \
-    npm init && \
-    npm install sequelize pg pg-hstore
-
-RUN mkdir -p /var/run/sshd && \
+    mkdir -p /var/run/sshd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     echo 'root:root' | chpasswd
+
+WORKDIR /root
+
+RUN npm init -y && \
+    npm install sequelize pg pg-hstore
+
+COPY *.js .
 
 ENTRYPOINT /usr/sbin/sshd -D
