@@ -1,1 +1,0 @@
-document.getElementById('username').textContent = localStorage.getItem('tetrisUsername');
