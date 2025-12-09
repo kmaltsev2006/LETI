@@ -6,6 +6,6 @@
 
 int main()
 {
-    mlta::Solution solution(9, 2);
+    mlta::Solution solution(9, 4);
     solution.solve();
 }

@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "Splice.hpp"
+#include "utils.hpp"
 
 namespace mlta
 {
@@ -87,6 +88,8 @@ public:
     };
 
 public:
+
+    // Object with feature k2 (value=j2) located from the `side` of the ojbect with feature k1 (value=j1)
     explicit Lim3(bdd ***p, int n, Splice splice, int k1, int k2, int j1, int j2, Side side)
         : _p{p}, _n{n}, _splice{splice}, _k1{k1}, _k2(k2), _j1{j1}, _j2{j2}, _side{side}
     {}
@@ -96,13 +99,19 @@ public:
     void apply() override
     {
         if (!_solution) { std::abort(); }
+        *_solution &= (*this)();
+    }
 
+    bdd operator()()
+    {
+        bdd ret_val = bddtrue;
         for (int p = 0; p < _n; ++p)
         {
             bdd a = _p[_k1][p][_j1];
             bdd b = toSide(p);
-            *_solution &= !a & !b | a & b;
+            ret_val &= !a & !b | a & b;
         }
+        return ret_val;
     }
 
 private:
@@ -115,17 +124,17 @@ private:
     {   
         int sqrt_n = std::ceil(std::sqrt(_n));
 
-        int p_x = p / sqrt_n;
-        int p_y = p % sqrt_n;
+        int p_y = p / sqrt_n;
+        int p_x = p % sqrt_n;
 
         int q_y = (Side::kLeft == _side) ? p_y : p_y;
         int q_x = (Side::kLeft == _side) ? p_x - 1 : p_x + 1;
-        
-        // using positive modulo here
+
+        // using positive modulo
         switch (_splice)
         {
-        case Splice::kHorizontal: q_x = (q_x % sqrt_n + sqrt_n) % sqrt_n; break;
-        case Splice::kVertical: q_y = (q_y % sqrt_n + sqrt_n) % sqrt_n; break;
+        case Splice::kHorizontal: q_x = mod(q_x, sqrt_n); break;
+        case Splice::kVertical: q_y = mod(q_y, sqrt_n); break;
         default: break;
         }
         
@@ -155,16 +164,9 @@ public:
         if (!_solution) { std::abort(); }
         
         Lim3 lim3_l(_p, _n, _splice, _k1, _k2, _j1, _j2, Lim3::Side::kLeft);
-        bdd left;
-        lim3_l.sub(&left);
-        lim3_l.apply();
-
         Lim3 lim3_r(_p, _n, _splice, _k1, _k2, _j1, _j2, Lim3::Side::kRight);
-        bdd right;
-        lim3_r.sub(&right);
-        lim3_r.apply();
         
-        *_solution &= left | right;
+        *_solution &= lim3_l() | lim3_r();
     }
 
 private:
@@ -195,6 +197,7 @@ public:
                     for (int j = 0; j < _n; ++j)
                     {
                         *_solution &= (!_p[k][i1][j] | !_p[k][i2][j]);
+                        // std::cout << bdd_satcount(*_solution) << std::endl;
                     }
                 }
             }
