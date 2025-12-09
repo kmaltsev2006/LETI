@@ -1,9 +1,9 @@
 #pragma once
 
 #include <bdd.h>
+#include <cmath>
 
-#include "mlta_types.hpp"
-#include "utils.hpp"
+#include "Splice.hpp"
 
 namespace mlta
 {
@@ -65,7 +65,6 @@ public:
 
         for (int i = 0; i < _n; ++i)
         {
-
             bdd a = _p[_k1][i][_j1];
             bdd b = _p[_k2][i][_j2];
             *_solution &= !a & !b | a & b;
@@ -114,7 +113,7 @@ private:
 
     bdd& toSide(int p)
     {   
-        int sqrt_n = sqrt(_n);
+        int sqrt_n = std::ceil(std::sqrt(_n));
 
         int p_x = p / sqrt_n;
         int p_y = p % sqrt_n;
@@ -122,8 +121,13 @@ private:
         int q_y = (Side::kLeft == _side) ? p_y : p_y;
         int q_x = (Side::kLeft == _side) ? p_x - 1 : p_x + 1;
         
-        if (Splice::kHorizontal == _splice) { q_x %= sqrt_n; }
-        else if (Splice::kVertical == _splice) { q_y %= sqrt_n; }
+        // using positive modulo here
+        switch (_splice)
+        {
+        case Splice::kHorizontal: q_x = (q_x % sqrt_n + sqrt_n) % sqrt_n; break;
+        case Splice::kVertical: q_y = (q_y % sqrt_n + sqrt_n) % sqrt_n; break;
+        default: break;
+        }
         
         static bdd bdd_false_instance = bddfalse; 
         
@@ -149,15 +153,16 @@ public:
     void apply() override
     {
         if (!_solution) { std::abort(); }
-
         
         Lim3 lim3_l(_p, _n, _splice, _k1, _k2, _j1, _j2, Lim3::Side::kLeft);
         bdd left;
         lim3_l.sub(&left);
+        lim3_l.apply();
 
         Lim3 lim3_r(_p, _n, _splice, _k1, _k2, _j1, _j2, Lim3::Side::kRight);
         bdd right;
-        lim3_l.sub(&right);
+        lim3_r.sub(&right);
+        lim3_r.apply();
         
         *_solution &= left | right;
     }
@@ -182,6 +187,7 @@ public:
 
         for (int k = 0; k < _m; ++k)
         {
+            std::cout << k << std::endl;
             for (int i1 = 0; i1 < _n - 1; ++i1)
             {
                 for (int i2 = i1 + 1; i2 < _n; ++i2)
@@ -216,15 +222,15 @@ public:
         
         for (int k = 0; k < _m; ++k)
         {
-            bdd tmp = bddfalse;
             for (int i = 0; i < _n; ++i)
             {
+                bdd tmp = bddfalse;
                 for (int j = 0; j < _n; ++j)
                 {
                     tmp |= _p[k][i][j];
                 }
+                *_solution &= tmp;
             }
-            *_solution &= tmp;
         }
     }
 
