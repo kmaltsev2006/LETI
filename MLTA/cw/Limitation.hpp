@@ -189,7 +189,6 @@ public:
 
         for (int k = 0; k < _m; ++k)
         {
-            std::cout << k << std::endl;
             for (int i1 = 0; i1 < _n - 1; ++i1)
             {
                 for (int i2 = i1 + 1; i2 < _n; ++i2)
@@ -197,7 +196,6 @@ public:
                     for (int j = 0; j < _n; ++j)
                     {
                         *_solution &= (!_p[k][i1][j] | !_p[k][i2][j]);
-                        // std::cout << bdd_satcount(*_solution) << std::endl;
                     }
                 }
             }

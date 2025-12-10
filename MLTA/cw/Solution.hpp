@@ -8,9 +8,12 @@
 #include "Limitation.hpp"
 #include "LimitationManager.hpp"
 #include "Splice.hpp"
+#include "print.hpp"
 
 namespace mlta
 {
+
+void allocVar(int, int);
 
 class Solution
 {
@@ -21,7 +24,10 @@ public:
         , _m{m}
         , _p{nullptr}
         , _splice{Splice::kNone}
-    {   
+    {
+        // n must be square number 
+        if (std::pow(std::ceil(std::sqrt(_n)), 2) != _n) { std::abort(); }
+        
         bdd_init(100'000'000, 10'000'000);
         bdd_setvarnum(_n * _m * std::ceil(std::log2(_n)));
 
@@ -71,7 +77,11 @@ public:
             lim->apply();
         }
 
-        std::cout << bdd_satcount(solution) << std::endl;
+        std::cout << "Solutions: " << bdd_satcount(solution) << std::endl;
+        VAR = new char[_n * _m * static_cast<int>(std::ceil(std::log2(_n)))];
+        N = _n;
+        bdd_allsat(solution, fun);
+        delete[] VAR;
     }
     
 
@@ -114,8 +124,6 @@ private:
         _limitations.addLimitation<Lim1>(_p, 0, 4, 4);
         _limitations.addLimitation<Lim1>(_p, 0, 5, 5);
         _limitations.addLimitation<Lim1>(_p, 0, 6, 6);
-        _limitations.addLimitation<Lim1>(_p, 0, 7, 7); //
-        _limitations.addLimitation<Lim1>(_p, 0, 8, 8); //
 
 
         _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 0, 0);
@@ -128,8 +136,6 @@ private:
         _limitations.addLimitation<Lim3>(_p, _n, _splice, 2, 2, 4, 3, Lim3::Side::kLeft);
         _limitations.addLimitation<Lim3>(_p, _n, _splice, 2, 2, 4, 5, Lim3::Side::kRight);
         _limitations.addLimitation<Lim3>(_p, _n, _splice, 2, 2, 7, 6, Lim3::Side::kLeft);
-        _limitations.addLimitation<Lim3>(_p, _n, _splice, 2, 2, 7, 8, Lim3::Side::kRight);
-
 
         _limitations.addLimitation<Lim4>(_p, _n, _splice, 3, 3, 0, 1);
         _limitations.addLimitation<Lim4>(_p, _n, _splice, 3, 3, 1, 2);
@@ -138,6 +144,26 @@ private:
         _limitations.addLimitation<Lim4>(_p, _n, _splice, 3, 3, 6, 7);
         _limitations.addLimitation<Lim4>(_p, _n, _splice, 3, 3, 7, 8);
         
+        // additional limitations
+        //
+        _limitations.addLimitation<Lim1>(_p, 0, 7, 7);
+        _limitations.addLimitation<Lim1>(_p, 0, 8, 8);
+
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 4, 4);
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 5, 5);
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 6, 6);
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 7, 7);
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 1, 8, 8);
+        _limitations.addLimitation<Lim2>(_p, _n, 1, 2, 0, 0);
+        _limitations.addLimitation<Lim2>(_p, _n, 1, 2, 1, 1);
+        _limitations.addLimitation<Lim2>(_p, _n, 1, 2, 2, 2);
+        _limitations.addLimitation<Lim2>(_p, _n, 1, 2, 3, 3);
+        _limitations.addLimitation<Lim2>(_p, _n, 1, 2, 4, 4);
+        _limitations.addLimitation<Lim2>(_p, _n, 0, 3, 4, 4);
+
+        _limitations.addLimitation<Lim3>(_p, _n, _splice, 2, 2, 7, 8, Lim3::Side::kRight);
+        //
+
         _limitations.addLimitation<Lim5>(_p, _n, _m);
         _limitations.addLimitation<Lim6>(_p, _n, _m);
     }
