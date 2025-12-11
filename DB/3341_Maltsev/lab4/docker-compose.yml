@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres-container
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=1234
+  sequelize:
+    image: sequelize
+    container_name: sequelize-container
+    build:
+      dockerfile: ./Dockerfile.node
+    ports:
+      - 2222:22
