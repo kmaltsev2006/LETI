@@ -1,0 +1,11 @@
+# Build
+*build/
+
+# Python env and cache
+*env/
+
+# Libs
+# parallel_strassen/benchmark/benchmark/
+# parallel_merge_sort/benchmark/benchmark/
+# parallel_merge_sort/task_parallel_merge_sort/boost*
+# *ut/googletest/
