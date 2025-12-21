@@ -7,7 +7,7 @@
 
 extern const int ITERATIONS = 1;
 
-class BenchmarkMatrixMultiplier : public benchmark::Fixture
+class BenchmarkParallelMerge : public benchmark::Fixture
 {
 public:
 
@@ -24,7 +24,7 @@ private:
     GenVec _gen_vec;
 };
 
-BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, MergeSort)(benchmark::State& state)
+BENCHMARK_DEFINE_F(BenchmarkParallelMerge, MergeSort)(benchmark::State& state)
 {
     for (auto _ : state)
     {
@@ -32,7 +32,7 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, MergeSort)(benchmark::State& state
     }
 }
 
-BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, DnCParallelMergeSort)(benchmark::State& state)
+BENCHMARK_DEFINE_F(BenchmarkParallelMerge, DnCParallelMergeSort)(benchmark::State& state)
 {
     for (auto _ : state)
     {
@@ -40,7 +40,7 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, DnCParallelMergeSort)(benchmark::S
     }
 }
 
-BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, TaskParallelMergeSort)(benchmark::State& state)
+BENCHMARK_DEFINE_F(BenchmarkParallelMerge, TaskParallelMergeSort)(benchmark::State& state)
 {
     for (auto _ : state)
     {
@@ -48,18 +48,18 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, TaskParallelMergeSort)(benchmark::
     }
 }
 
-BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, MergeSort)
-    ->DenseRange(100000, 10000000, 100000)
+BENCHMARK_REGISTER_F(BenchmarkParallelMerge, MergeSort)
+    ->DenseRange(1000000, 10000000, 100000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 
-BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, DnCParallelMergeSort)
-    ->DenseRange(100000, 10000000, 100000)
+BENCHMARK_REGISTER_F(BenchmarkParallelMerge, DnCParallelMergeSort)
+    ->DenseRange(1000000, 10000000, 100000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 
-BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, TaskParallelMergeSort)
-    ->DenseRange(10000, 100000, 10000)
+BENCHMARK_REGISTER_F(BenchmarkParallelMerge, TaskParallelMergeSort)
+    ->DenseRange(1000000, 10000000, 100000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 

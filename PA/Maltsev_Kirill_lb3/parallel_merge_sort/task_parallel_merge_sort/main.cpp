@@ -8,7 +8,7 @@
 int main()
 {
     GenVec gen_vec;
-    std::vector<int> a = gen_vec(10000000);
+    std::vector<int> a = gen_vec(100);
     taskParallelMergeSort(a);
     std::cout << std::is_sorted(a.begin(), a.end()) << std::endl;
 }

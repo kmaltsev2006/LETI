@@ -9,6 +9,9 @@
 namespace tp
 {
 
+const uint32_t DAG_NODES_COUNT = 1024;
+uint32_t GAP                   = 0;
+
 struct Node
 {
     explicit Node(int l, int m, int r, std::shared_ptr<Node> p=nullptr, int cnt=0)
@@ -59,8 +62,10 @@ void merge(boost::asio::thread_pool& thread_pool, std::shared_ptr<Node> p, T *v,
 template<typename T>
 void mergeSort(boost::asio::thread_pool& thread_pool, std::shared_ptr<Node> p, T *v, int l, int r)
 {
-    if (l >= r)
+    if (l - r <= 65536)
     {
+        std::sort(v + l, v + r + 1);
+
         if (p && (0 == --p->cnt))
         {
             boost::asio::post(thread_pool, [&thread_pool, p, v](){
@@ -89,6 +94,7 @@ template<typename T>
 void taskParallelMergeSort(std::vector<T>& v)
 {
     boost::asio::thread_pool thread_pool(std::thread::hardware_concurrency());
+    tp::GAP = v.size() / tp::DAG_NODES_COUNT;
     boost::asio::post(thread_pool, [&](){
         tp::mergeSort(thread_pool, nullptr, v.data(), 0, v.size() - 1);
     });
