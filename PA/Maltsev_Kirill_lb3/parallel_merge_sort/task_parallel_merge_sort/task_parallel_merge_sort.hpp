@@ -59,7 +59,7 @@ void merge(boost::asio::thread_pool& thread_pool, std::shared_ptr<Node> p, T *v,
 template<typename T>
 void mergeSort(boost::asio::thread_pool& thread_pool, std::shared_ptr<Node> p, T *v, int l, int r)
 {
-    if (l - r <= 131072)
+    if (l - r <= 65536)
     {
         std::sort(v + l, v + r + 1);
 
