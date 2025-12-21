@@ -49,17 +49,17 @@ BENCHMARK_DEFINE_F(BenchmarkParallelMerge, TaskParallelMergeSort)(benchmark::Sta
 }
 
 BENCHMARK_REGISTER_F(BenchmarkParallelMerge, MergeSort)
-    ->DenseRange(1000000, 10000000, 100000)
+    ->DenseRange(1000000, 10000000, 200000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(BenchmarkParallelMerge, DnCParallelMergeSort)
-    ->DenseRange(1000000, 10000000, 100000)
+    ->DenseRange(1000000, 10000000, 200000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(BenchmarkParallelMerge, TaskParallelMergeSort)
-    ->DenseRange(1000000, 10000000, 100000)
+    ->DenseRange(1000000, 10000000, 200000)
     ->Iterations(ITERATIONS)
     ->Unit(benchmark::kMillisecond);
 

@@ -10,7 +10,6 @@ namespace DnCp
 
 std::mutex mutex;
 int available            = std::thread::hardware_concurrency();
-const int GAP            = 1024;
 const int THREADS_TO_GEN = 2;
 
 template<typename T>
@@ -49,7 +48,7 @@ void mergeSort(T *v, int l, int r)
     int m = (l + r) / 2;
 
     mutex.lock();
-    bool use_new_threads = (available >= THREADS_TO_GEN) && (r - l > GAP);
+    bool use_new_threads = (available >= THREADS_TO_GEN) && (r - l > 1024);
     if (use_new_threads) available -= THREADS_TO_GEN;
     mutex.unlock();
 
