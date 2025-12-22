@@ -77,6 +77,11 @@ static void multiplyRawStrassen(T* a, T* b, T* c, Dimension dim) {
         return;
     }
     
+    if (n <= 64) {
+        multiplyRaw(a, b, c, dim);
+        return;
+    }
+
     int newSize = n / 2;
     int total = newSize * newSize;
     
