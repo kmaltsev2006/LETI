@@ -60,10 +60,10 @@ BENCHMARK_DEFINE_F(BenchmarkMatrixMultiplier, MultiplyConcurrentlyStrassen)(benc
     }
 }
 
-BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, Multiply)
-    ->DenseRange(128, 1024, 128)
-    ->Iterations(ITERATIONS)
-    ->Unit(benchmark::kMillisecond);
+// BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, Multiply)
+//     ->DenseRange(128, 1024, 128)
+//     ->Iterations(ITERATIONS)
+//     ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_REGISTER_F(BenchmarkMatrixMultiplier, MultiplyStrassen)
     ->DenseRange(128, 1024, 128)
