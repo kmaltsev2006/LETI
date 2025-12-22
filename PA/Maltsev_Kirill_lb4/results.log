@@ -1,0 +1,80 @@
+Mon Dec 22 11:31:08 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.44.01              Driver Version: 590.44.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2060        On  |   00000000:07:00.0  On |                  N/A |
+|  0%   49C    P8             14W /  170W |     435MiB /   6144MiB |     38%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A            1121      G   /usr/lib/xorg/Xorg                      190MiB |
+|    0   N/A  N/A            2097      G   cinnamon                                 54MiB |
+|    0   N/A  N/A            3049      G   ...rack-uuid=3190708988185955192         73MiB |
+|    0   N/A  N/A            3550      G   /opt/telegram/telegram                   50MiB |
+|    0   N/A  N/A            7814      G   /usr/share/code/code                     54MiB |
++-----------------------------------------------------------------------------------------+
+
+kmaltsev@mint:~/repo/LETI/PA/Maltsev_Kirill_lb4/MatrixMultiplication$ ./a.out 
+Available Shared Memory per Block: 49152 B 
+Max Threads per Block: 1024 
+TEST 1 PASSED
+TEST 2 PASSED
+TEST 3 PASSED
+TEST 4 PASSED
+TEST 5 PASSED
+1 1 1: 0.239603ms
+2 2 2: 0.336735ms
+4 4 4: 0.313292ms
+8 8 8: 2.88494ms
+16 16 16: 1.49837ms
+32 32 32: 0.172125ms
+64 64 64: 0.1911ms
+128 128 128: 0.222701ms
+256 256 256: 0.40265ms
+512 512 512: 3.18388ms
+1024 1024 1024: 14.6353ms
+2048 2048 2048: 66.8194ms
+4096 4096 4096: 352.455ms
+8192 8192 8192: 1735.55ms
+
+kmaltsev@mint:~/repo/LETI/PA/Maltsev_Kirill_lb4/MergeSort$ ./a.out 
+TEST 1 PASSED
+TEST 2 PASSED
+TEST 3 PASSED
+TEST 4 PASSED
+TEST 5 PASSED
+TEST 6 PASSED
+TEST 7 PASSED
+TEST 8 PASSED
+TEST 9 PASSED
+TEST 10 PASSED
+TEST 11 PASSED
+100000: 3.92825ms
+200000: 6.07037ms
+300000: 8.43345ms
+400000: 9.70301ms
+500000: 10.6154ms
+600000: 16.1246ms
+700000: 17.8021ms
+800000: 18.7955ms
+900000: 20.4539ms
+1000000: 21.5007ms
+1100000: 30.8589ms
+1200000: 32.5158ms
+1300000: 34.694ms
+1400000: 35.7478ms
+1500000: 37.1238ms
+1600000: 37.7815ms
+1700000: 39.5137ms
+1800000: 40.856ms
+1900000: 41.9378ms
+2000000: 43.0881ms
