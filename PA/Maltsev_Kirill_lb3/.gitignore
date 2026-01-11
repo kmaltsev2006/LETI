@@ -1,0 +1,7 @@
+# Build
+*build/
+
+# Python env and cache
+*env/
+
+boost*
